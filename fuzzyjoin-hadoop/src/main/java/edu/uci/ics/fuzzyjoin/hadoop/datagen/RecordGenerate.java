@@ -20,6 +20,7 @@
 package edu.uci.ics.fuzzyjoin.hadoop.datagen;
 
 import java.io.IOException;
+import java.net.URI;
 
 import org.apache.hadoop.filecache.DistributedCache;
 import org.apache.hadoop.fs.FileSystem;
@@ -99,7 +100,10 @@ public class RecordGenerate {
 
             Path outputPath = new Path(recordsDir + String.format("-%03d", i));
             FileOutputFormat.setOutputPath(job, outputPath);
-            FileSystem.get(job).delete(outputPath, true);
+            String bucket = "YOUR_S3_BUCKET"
+            String uriStr = "s3://"+bucket+"/input/";
+            URI uri = URI.create(uriStr);
+            FileSystem.get(uri,job).delete(outputPath, true);
             runningJobs[i] = jobClient.submitJob(job);
             // FuzzyJoinDriver.run(job);
         }

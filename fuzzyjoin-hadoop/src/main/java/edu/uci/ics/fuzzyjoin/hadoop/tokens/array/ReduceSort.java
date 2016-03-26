@@ -26,6 +26,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.net.URI;
 
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
@@ -118,7 +119,10 @@ public class ReduceSort extends MapReduceBase implements
             output.collect(token, nullWritable);
         }
 
-        FileSystem fs = FileSystem.get(conf);
+        String bucket = "YOUR_S3_BUCKET"
+        String uriStr = "s3://"+bucket+"/input/";
+        URI uri = URI.create(uriStr);
+        FileSystem fs = FileSystem.get(uri,conf);
         String path = FileOutputFormat.getWorkOutputPath(conf).toString();
 
         FSDataOutputStream statsWriter = fs.create(new Path(path.toString()

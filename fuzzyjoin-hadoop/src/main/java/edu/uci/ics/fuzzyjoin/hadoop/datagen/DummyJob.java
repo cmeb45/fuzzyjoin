@@ -20,6 +20,7 @@
 package edu.uci.ics.fuzzyjoin.hadoop.datagen;
 
 import java.io.IOException;
+import java.net.URI;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -56,11 +57,14 @@ public class DummyJob {
         FileInputFormat.addInputPath(job, new Path(dataDir + records));
         Path outputPath = new Path("/tmp/dummyjob");
         FileOutputFormat.setOutputPath(job, outputPath);
-        FileSystem.get(job).delete(outputPath, true);
+        String bucket = "YOUR_S3_BUCKET"
+        String uriStr = "s3://"+bucket+"/input/";
+        URI uri = URI.create(uriStr);
+        FileSystem.get(uri,job).delete(outputPath, true);
         //
         // run
         //
         FuzzyJoinDriver.run(job);
-        FileSystem.get(job).delete(outputPath, true);
+        FileSystem.get(uri,job).delete(outputPath, true);
     }
 }

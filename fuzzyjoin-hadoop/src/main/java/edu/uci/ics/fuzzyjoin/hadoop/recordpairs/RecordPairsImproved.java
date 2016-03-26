@@ -20,6 +20,7 @@
 package edu.uci.ics.fuzzyjoin.hadoop.recordpairs;
 
 import java.io.IOException;
+import java.net.URI;
 
 import org.apache.hadoop.filecache.DistributedCache;
 import org.apache.hadoop.fs.FileSystem;
@@ -89,13 +90,16 @@ public class RecordPairsImproved {
         }
         Path outputPath = new Path(dataDir + "/recordpairs" + dataCopyFormatted);
         FileOutputFormat.setOutputPath(job, outputPath);
-        FileSystem.get(job).delete(outputPath, true);
+        String bucket = "YOUR_S3_BUCKET"
+        String uriStr = "s3://"+bucket+"/input/";
+        URI uri = URI.create(uriStr);
+        FileSystem.get(uri,job).delete(outputPath, true);
 
         //
         // set distribution cache
         //
         Path ridpairsPath = new Path(dataDir + "/ridpairs" + dataCopyFormatted);
-        FileSystem fs = FileSystem.get(job);
+        FileSystem fs = FileSystem.get(uri,job);
         for (Path ridpairdFile : FileUtil.stat2Paths(fs.listStatus(
                 ridpairsPath, new OutputLogFilter()))) {
             DistributedCache.addCacheFile(ridpairdFile.toUri(), job);

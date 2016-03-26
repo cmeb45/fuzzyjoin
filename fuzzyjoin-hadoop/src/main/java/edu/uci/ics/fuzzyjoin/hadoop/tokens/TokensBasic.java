@@ -21,6 +21,7 @@ package edu.uci.ics.fuzzyjoin.hadoop.tokens;
 
 import java.io.IOException;
 import java.util.Date;
+import java.net.URI;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -102,7 +103,10 @@ public class TokensBasic {
         Path outputPath = new Path(dataDir + "/tokens.phase1"
                 + dataCopyFormatted);
         FileOutputFormat.setOutputPath(jobPhase1, outputPath);
-        FileSystem.get(jobPhase1).delete(outputPath, true);
+        String bucket = "YOUR_S3_BUCKET"
+        String uriStr = "s3://"+bucket+"/input/";
+        URI uri = URI.create(uriStr);
+        FileSystem.get(uri, jobPhase1).delete(outputPath, true);
 
         //
         // ****************************** Phase 2 ******************************
@@ -136,7 +140,7 @@ public class TokensBasic {
         FileInputFormat.addInputPath(jobPhase2, outputPath);
         outputPath = new Path(dataDir + "/tokens" + dataCopyFormatted);
         FileOutputFormat.setOutputPath(jobPhase2, outputPath);
-        FileSystem.get(jobPhase2).delete(outputPath, true);
+        FileSystem.get(uri,jobPhase2).delete(outputPath, true);
 
         //
         // run both

@@ -21,6 +21,7 @@ package edu.uci.ics.fuzzyjoin.hadoop.recordpairs;
 
 import java.io.IOException;
 import java.util.Date;
+import java.net.URI;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -107,7 +108,10 @@ public class RecordPairsBasic {
         Path outputPath = new Path(dataDir + "/recordpairs.phase1"
                 + dataCopyFormatted);
         FileOutputFormat.setOutputPath(jobPhase1, outputPath);
-        FileSystem.get(jobPhase1).delete(outputPath, true);
+        String bucket = "YOUR_S3_BUCKET"
+        String uriStr = "s3://"+bucket+"/input/";
+        URI uri = URI.create(uriStr);
+        FileSystem.get(uri,jobPhase1).delete(outputPath, true);
 
         //
         // ****************************** Phase 2 ******************************
@@ -145,7 +149,7 @@ public class RecordPairsBasic {
         FileInputFormat.addInputPath(jobPhase2, outputPath);
         outputPath = new Path(dataDir + "/recordpairs" + dataCopyFormatted);
         FileOutputFormat.setOutputPath(jobPhase2, outputPath);
-        FileSystem.get(jobPhase2).delete(outputPath, true);
+        FileSystem.get(uri,jobPhase2).delete(outputPath, true);
 
         //
         // run

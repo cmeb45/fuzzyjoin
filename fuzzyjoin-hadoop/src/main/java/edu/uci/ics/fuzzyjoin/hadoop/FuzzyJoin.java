@@ -21,6 +21,7 @@ package edu.uci.ics.fuzzyjoin.hadoop;
 
 import java.io.IOException;
 import java.util.Date;
+import java.net.URI;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -64,15 +65,18 @@ public class FuzzyJoin {
         }
         int dataCopy = job.getInt(FuzzyJoinDriver.DATA_COPY_PROPERTY, 1);
         String dataCopyFormatted = String.format("-%03d", dataCopy - 1);
-        FileSystem.get(job).delete(
+        String bucket = "YOUR_S3_BUCKET"
+        String uriStr = "s3://"+bucket+"/input/";
+        URI uri = URI.create(uriStr);
+        FileSystem.get(uri,job).delete(
                 new Path(dataDir + "/tokens" + dataCopyFormatted), true);
-        FileSystem.get(job).delete(
+        FileSystem.get(uri,job).delete(
                 new Path(dataDir + "/tokens.phase1" + dataCopyFormatted), true);
-        FileSystem.get(job).delete(
+        FileSystem.get(uri,job).delete(
                 new Path(dataDir + "/ridpairs" + dataCopyFormatted), true);
-        FileSystem.get(job).delete(
+        FileSystem.get(uri,job).delete(
                 new Path(dataDir + "/recordpairs" + dataCopyFormatted), true);
-        FileSystem.get(job).delete(
+        FileSystem.get(uri,job).delete(
                 new Path(dataDir + "/recordpairs.phase1" + dataCopyFormatted),
                 true);
 

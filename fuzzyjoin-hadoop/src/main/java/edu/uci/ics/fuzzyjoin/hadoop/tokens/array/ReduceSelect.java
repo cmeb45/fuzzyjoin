@@ -22,6 +22,7 @@ package edu.uci.ics.fuzzyjoin.hadoop.tokens.array;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.net.URI;
 
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
@@ -51,7 +52,10 @@ public class ReduceSelect extends MapReduceBase implements
 
     @Override
     public void close() throws IOException {
-        FileSystem fs = FileSystem.get(conf);
+        String bucket = "YOUR_S3_BUCKET"
+        String uriStr = "s3://"+bucket+"/input/";
+        URI uri = URI.create(uriStr);
+        FileSystem fs = FileSystem.get(uri,conf);
         String path = FileOutputFormat.getWorkOutputPath(conf).toString();
 
         FSDataOutputStream statsWriter = fs.create(new Path(path.toString()

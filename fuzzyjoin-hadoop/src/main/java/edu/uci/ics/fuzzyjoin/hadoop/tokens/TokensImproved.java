@@ -20,6 +20,7 @@
 package edu.uci.ics.fuzzyjoin.hadoop.tokens;
 
 import java.io.IOException;
+import java.net.URI;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -89,7 +90,10 @@ public class TokensImproved {
         }
         Path outputPath = new Path(dataDir + "/tokens" + dataCopyFormatted);
         FileOutputFormat.setOutputPath(job, outputPath);
-        FileSystem.get(job).delete(outputPath, true);
+        String bucket = "YOUR_S3_BUCKET"
+        String uriStr = "s3://"+bucket+"/input/";
+        URI uri = URI.create(uriStr);
+        FileSystem.get(uri,job).delete(outputPath, true);
 
         //
         // run

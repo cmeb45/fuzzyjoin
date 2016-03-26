@@ -21,6 +21,7 @@ package edu.uci.ics.fuzzyjoin.hadoop.datagen;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.net.URI;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -70,7 +71,10 @@ public class RecordBuild {
                 + "-000/" + raw));
         Path outputPath = new Path(dataDir + "/recordsbulk" + suffix + "-000");
         FileOutputFormat.setOutputPath(job, outputPath);
-        FileSystem.get(job).delete(outputPath, true);
+        String bucket = "YOUR_S3_BUCKET"
+        String uriStr = "s3://"+bucket+"/input/";
+        URI uri = URI.create(uriStr);
+        FileSystem.get(uri,job).delete(outputPath, true);
 
         //
         // run
